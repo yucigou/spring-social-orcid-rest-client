@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="js/dataclaiming/ebithor-claiming.0.1.0.js"></script>
+<script>
+var refreshIntervalId;
+
+function testX() {
+	$.getJSON("http://localhost:8080/springsocial/api/orcid/profile", function(result) {
+		console.log("My profile: ");
+      	console.log(result);
+  });
+}
+
+function testY() {
+	$.ajax({
+		   url: 'http://localhost:8080/springsocial/api/orcid/profile',
+		   xhrFields: {
+		      withCredentials: true
+		   }
+		}).done(function(data) {
+			console.log("Result: ");
+			console.log(data);
+		})
+		.fail(function() {
+		  alert("Ajax failed to fetch data")
+		});
+}
+function receiveMessage(event)
+{
+  // Do we trust the sender of this message?  (might be
+  // different from what we originally opened, for example).
+  if (event.origin !== "http://localhost:8080") {
+	console.log("event.origin not allowed: " + event.origin);  
+	return;
+  }
+
+  console.log("event.origin: " + event.origin); 
+  $.ajax({
+	   url: 'http://localhost:8080/springsocial/api/orcid/profile',
+	   xhrFields: {
+	      withCredentials: true
+	   }
+	}).done(function(data) {
+		console.log("Result: ");
+		console.log(data);
+		$('.divNotSigned').hide();
+		$('.divSigned').show();
+		$('.lblUserName').text(data.orcidBio.personalDetails.givenNames);
+	})
+	.fail(function() {
+	  alert("Ajax failed to fetch data")
+	});
+}
+
+window.addEventListener("message", receiveMessage, false);
+
+function loadClaiming(userName) {
+	if (userName) {
+		console.log("Logged in: " + userName);
+	} else {
+		console.log("Not logged in: " + userName);
+	}
+	console.log("load claiming...");
+	thorApplicationNamespace.claimingInfo(callbackloadClaiming);
+}
+
+function callbackloadClaiming(data) {
+	loadLinks(data);
+	loadUserName(data);
+	displayClaimBox(data);
+}
+
+/**
+ * Display the claiming box for autenthicated/non-authenticated user.
+ */
+function displayClaimBox(data) {
+	if (thorApplicationNamespace.isSignedIn(data)) {
+		$('.divNotSigned').hide();
+		$('.divSigned').show();
+	}
+	else {
+		$('.divNotSigned').show();
+		$('.divSigned').hide();
+	}
+}
+
+function loadUserName(data) {
+	$('.lblUserName').empty();
+	$('.lblUserName').append(thorApplicationNamespace.getUserName(data));
+}
+
+/**
+ * Loads the links for login, logout and claiming from the Thor WS Response.
+ */
+function loadLinks(data) {
+	
+	 //Load LOGIN LINK Url
+	$('.signInLink').unbind( "click" );
+	$('.signInLink').click(function(e){
+        e.preventDefault(); // this will prevent the browser to redirect to the href
+        // if js is disabled nothing should change and the link will work normally
+        var url = thorApplicationNamespace.getLoginUrl(data);
+        var windowName = $(this).attr('id');
+        console.log("URL: " + url);
+        if (!url) {
+        	url = "http://localhost:8080/springsocial/login";
+        	console.log("url final: " + url);
+        }
+        var popup = window.open(url, windowName, "height=900,width=800");
+        //refreshIntervalId = setInterval(function() { 
+        //	popup.postMessage("hello there!", "http://localhost:8080");
+        //	console.log("Msg sent");
+        //}, 1000);
+    });
+
+
+			
+
+	//Load LOGOUT LINK Url
+	$('.logoutLink').unbind( "click" );
+	$('.logoutLink').click(function(e){
+        e.preventDefault(); // this will prevent the browser to redirect to the href
+        // if js is disabled nothing should change and the link will work normally
+        var url = thorApplicationNamespace.getLogoutUrl(data);
+        var windowName = $(this).attr('id');
+        window.open(url, windowName, "height=50,width=50");
+    });
+}
+
+</script>
+</head>
+<body onLoad="loadClaiming()">
+	<table>
+		<tr style="background-color: olive;">
+			<td>Claiming</td>
+		</tr>
+		<tr>
+			<td>
+				<div class="divNotSigned">
+					<table>
+						<tr>
+							<td>You can <a href="#" class="signInLink">sign-in to ORCID</a> to claim your data</td>
+						</tr>
+						<tr>
+							<td><input type="checkbox" class="rememberMe"> Remember
+								me on this computer</td>
+						</tr>
+					</table>
+				</div>
+				<div class="divSigned" style="display:none">
+					<table>
+						<tr>
+							<td>You have signed in as <label class="lblUserName" /></td>
+						</tr>
+						<tr>
+							<td>You can <a href="#" class="claimLink">claim 1cb3</a> into your ORCID.
+							</td>
+						</tr>
+						<tr>
+							<td><a href="#" class="logoutLink"><i>logout</i></a>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>
