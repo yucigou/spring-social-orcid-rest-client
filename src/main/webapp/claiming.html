@@ -2,19 +2,9 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Insert title here</title>
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script src="js/dataclaiming/ebithor-claiming.0.1.0.js"></script>
+<title>Spring Social ORCID REST WS Client</title>
+<script	src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script>
-var refreshIntervalId;
-
-function testX() {
-	$.getJSON("http://localhost:8080/springsocial/api/orcid/profile", function(result) {
-		console.log("My profile: ");
-      	console.log(result);
-  });
-}
 
 function testY() {
 	$.ajax({
@@ -59,82 +49,17 @@ function receiveMessage(event)
 
 window.addEventListener("message", receiveMessage, false);
 
-function loadClaiming(userName) {
-	if (userName) {
-		console.log("Logged in: " + userName);
-	} else {
-		console.log("Not logged in: " + userName);
-	}
-	console.log("load claiming...");
-	thorApplicationNamespace.claimingInfo(callbackloadClaiming);
-}
-
-function callbackloadClaiming(data) {
-	loadLinks(data);
-	loadUserName(data);
-	displayClaimBox(data);
-}
-
-/**
- * Display the claiming box for autenthicated/non-authenticated user.
- */
-function displayClaimBox(data) {
-	if (thorApplicationNamespace.isSignedIn(data)) {
-		$('.divNotSigned').hide();
-		$('.divSigned').show();
-	}
-	else {
-		$('.divNotSigned').show();
-		$('.divSigned').hide();
-	}
-}
-
-function loadUserName(data) {
-	$('.lblUserName').empty();
-	$('.lblUserName').append(thorApplicationNamespace.getUserName(data));
-}
-
-/**
- * Loads the links for login, logout and claiming from the Thor WS Response.
- */
-function loadLinks(data) {
-	
-	 //Load LOGIN LINK Url
-	$('.signInLink').unbind( "click" );
+$(document).ready(function(){
 	$('.signInLink').click(function(e){
-        e.preventDefault(); // this will prevent the browser to redirect to the href
-        // if js is disabled nothing should change and the link will work normally
-        var url = thorApplicationNamespace.getLoginUrl(data);
         var windowName = $(this).attr('id');
-        console.log("URL: " + url);
-        if (!url) {
-        	url = "http://localhost:8080/springsocial/login";
-        	console.log("url final: " + url);
-        }
+        url = "http://localhost:8080/springsocial/login";
         var popup = window.open(url, windowName, "height=900,width=800");
-        //refreshIntervalId = setInterval(function() { 
-        //	popup.postMessage("hello there!", "http://localhost:8080");
-        //	console.log("Msg sent");
-        //}, 1000);
     });
-
-
-			
-
-	//Load LOGOUT LINK Url
-	$('.logoutLink').unbind( "click" );
-	$('.logoutLink').click(function(e){
-        e.preventDefault(); // this will prevent the browser to redirect to the href
-        // if js is disabled nothing should change and the link will work normally
-        var url = thorApplicationNamespace.getLogoutUrl(data);
-        var windowName = $(this).attr('id');
-        window.open(url, windowName, "height=50,width=50");
-    });
-}
+});
 
 </script>
 </head>
-<body onLoad="loadClaiming()">
+<body>
 	<table>
 		<tr style="background-color: olive;">
 			<td>Claiming</td>
@@ -144,7 +69,7 @@ function loadLinks(data) {
 				<div class="divNotSigned">
 					<table>
 						<tr>
-							<td>You can <a href="#" class="signInLink">sign-in to ORCID</a> to claim your data</td>
+							<td>You can <a href="javascript:void(0)" class="signInLink">sign-in to ORCID</a> to claim your data</td>
 						</tr>
 						<tr>
 							<td><input type="checkbox" class="rememberMe"> Remember
