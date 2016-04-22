@@ -53,6 +53,9 @@ $(document).ready(function(){
 	$('.signInLink').click(function(e){
         var windowName = $(this).attr('id');
         url = "http://localhost:8080/springsocial/login";
+        if ($('#rememberMeId').is(":checked")) {
+        	url += "?remember_me"
+        }
         var popup = window.open(url, windowName, "height=900,width=800");
     });
 });
@@ -72,8 +75,7 @@ $(document).ready(function(){
 							<td>You can <a href="javascript:void(0)" class="signInLink">sign-in to ORCID</a> to claim your data</td>
 						</tr>
 						<tr>
-							<td><input type="checkbox" class="rememberMe"> Remember
-								me on this computer</td>
+							<td><input id="rememberMeId" type="checkbox" class="rememberMe"> Remember	me on this computer</td>
 						</tr>
 					</table>
 				</div>
