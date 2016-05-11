@@ -8,7 +8,7 @@
 
 function testY() {
 	$.ajax({
-		   url: 'http://localhost:8080/springsocial/api/orcid/profile',
+		   url: 'http://localhost:8080/spring-social-orcid-client/api/orcid/profile',
 		   xhrFields: {
 		      withCredentials: true
 		   }
@@ -31,7 +31,7 @@ function receiveMessage(event)
 
   console.log("event.origin: " + event.origin); 
   $.ajax({
-	   url: 'http://localhost:8080/springsocial/api/orcid/profile',
+	   url: 'http://localhost:8080/spring-social-orcid-client/api/orcid/profile',
 	   xhrFields: {
 	      withCredentials: true
 	   }
@@ -52,7 +52,7 @@ window.addEventListener("message", receiveMessage, false);
 $(document).ready(function(){
 	$('.signInLink').click(function(e){
         var windowName = $(this).attr('id');
-        url = "http://localhost:8080/springsocial/login";
+        url = "http://localhost:8080/spring-social-orcid-client/login";
         if ($('#rememberMeId').is(":checked")) {
         	url += "?remember_me"
         }
