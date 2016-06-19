@@ -1,0 +1,5 @@
+------------------------
+Release date: 2016-06-19
+Release tag: spring-social-orcid-web-service-client_r1_0
+Release note:
+	A web application, via JavaScript, uses the Spring Social ORCID based web service to connect to ORCID.
