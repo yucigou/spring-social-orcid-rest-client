@@ -1,4 +1,10 @@
 ------------------------
+Release date: 2016-06-27
+Release tag: spring-social-orcid-web-service-client_r1_1
+Release note:
+	Add a test for the add-works REST API.
+
+------------------------
 Release date: 2016-06-19
 Release tag: spring-social-orcid-web-service-client_r1_0
 Release note:
