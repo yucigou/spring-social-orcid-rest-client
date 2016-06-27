@@ -20,6 +20,22 @@ function testY() {
 		  alert("Ajax failed to fetch data")
 		});
 }
+
+function testZ() {
+	$.ajax({
+		   url: 'http://localhost:8080/spring-social-orcid-client/api/orcid/add/works',
+		   xhrFields: {
+		      withCredentials: true
+		   }
+		}).done(function(data) {
+			console.log("Result: ");
+			console.log(data);
+		})
+		.fail(function() {
+		  alert("Ajax failed to fetch data")
+		});
+}
+
 function receiveMessage(event)
 {
   // Do we trust the sender of this message?  (might be
